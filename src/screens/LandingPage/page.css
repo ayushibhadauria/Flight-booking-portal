@@ -1,0 +1,17 @@
+p {
+    color: #bf1650;
+  }
+  
+  p::before {
+    display: inline;
+    content: "⚠ ";
+  }
+
+  #form {
+
+    border: 1px solid black;
+    padding: 1.5%;
+    text-align: center;
+    
+
+}
