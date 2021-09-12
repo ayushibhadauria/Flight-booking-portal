@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { TextField, RadioGroup, Radio, Button, Container, makeStyles } from "@material-ui/core"
+import { TextField, RadioGroup, Radio, Button, Container, makeStyles, FormControl } from "@material-ui/core"
 import { Grid } from "@material-ui/core"
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -12,6 +12,7 @@ import './page.css'
 import '../../component/BookFlight/Count'
 import Incredecre from '../../component/BookFlight/Count';
 import { useHistory } from "react-router-dom";
+import Adultcount from '../../component/BookFlight/Adultcount';
 
 
 export default function LandingPage(props) {
@@ -37,24 +38,20 @@ export default function LandingPage(props) {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [cities, setCities] = useState([]);
+  const [selectedValue, setSelectedValue] = React.useState();
+  const [startDate, setStartDate] = React.useState()
+  const [endDate, setEndDate] = React.useState()
+
   const { register, control, handleSubmit, formState: { errors }, reset } = useForm();
-  const [selectedValue, setSelectedValue] = useState();
   const [localData, setLocalData] = useState([]);
   const isUserLogin = useSelector(state => state)
   const history = useHistory();
   const classes = useStyles();
   const dispatch = useDispatch()
 
-  console.log("allll--->", isUserLogin.Num_of_Booking)
-
   useEffect(() => {
     setLocalData(JSON.parse(localStorage.getItem(`${isUserLogin?.userData?.userProfileData?.email}`)))
   }, [])
-
-
-  const handleChange = (e) => {
-    setSelectedValue(e.target.value);
-  };
 
   const onSubmit = (data) => {
     if (isUserLogin.login === true) {
@@ -67,8 +64,8 @@ export default function LandingPage(props) {
       dispatch({ type: 'UPDATE_USER', payload: [true, userData, isUserLogin.Num_of_Booking + 1] })
 
       localStorage.setItem(`${isUserLogin.userData.userProfileData.email} ${isUserLogin.Num_of_Booking + 1}`, JSON.stringify(userData))
-      alert("Flight data saved!!!!")
-      //history.push('/success')
+      //alert("Flight data saved!!!!")
+      history.push('/success')
     } else {
       alert("please login first!")
       history.push('/login')
@@ -108,35 +105,46 @@ export default function LandingPage(props) {
             </Grid>
 
           <Container className={classes.container} maxWidth="sm"  >
-            <Grid container spacing={2}  >
-              <Grid item xs={6} >
-                <RadioGroup>
+          <FormControl component="fieldset">
+          
+          <Controller
+            rules={{ required: true }}
+            control={control}
+            //defaultValue="business"
+            name="promoting2"
+            render={({ field }) => {
+              const { name, onBlur, onChange, value } = field;
+              return (
+                <RadioGroup row
+                  value={value}
+                  onBlur={onBlur}
+                  onChange={(e) => {
+                    onChange(e);
+                    console.log(e.target.value);
+                  }}
+                >
                   <FormControlLabel
                     checked={selectedValue === 'One-way'}
-                    onChange={handleChange}
+                    onChange={(e)=> setSelectedValue(e.target.value)}
+                    //defaultValue="One-way"
                     value="One-way"
                     name="trip"
                     label="One-way"
                     required={true}
                     control={<Radio />} />
-                </RadioGroup>
-              </Grid>
-              
-
-              <Grid item xs={6} >
-                <RadioGroup>
                   <FormControlLabel
                     checked={selectedValue === 'Round-trip'}
-                    onChange={handleChange}
+                    onChange={(e)=> setSelectedValue(e.target.value)}
                     value="Round-trip"
                     name="trip"
                     label="Round-trip"
                     control={<Radio />} />
+                   {errors.promoting2 && <p>This field is required</p>}
                 </RadioGroup>
-              </Grid>
-              {errors.trip && <p>This field is required</p>}
-              
-            </Grid>
+              );
+            }}
+          />
+        </FormControl>
 
             <Grid container spacing={2}>
               <Grid item xs={6}>
@@ -174,12 +182,16 @@ export default function LandingPage(props) {
                   name="ReactDatepicker"
                   render={({ field: { onChange, onBlur, value, ref } }) => (
                     <ReactDatePicker
-                      onChange={onChange}
+                      required
+                      //onChange={onChange}
+                      onChange={(date) => setStartDate(date)}
+                      startDate={startDate}
+                      endDate={endDate}
                       onBlur={onBlur}
-                      selected={value}
+                      selected={startDate}
                       minDate={new Date()}
                       dateFormat='dd/MM/yyyy'
-                      filterDate={date => date.getDate() !== 6 && date.getDate() !== 0} />)} />
+                      filterDate={date => date.getDay() !== 6 && date.getDay() !== 0} />)} />
               </Grid>
 
               <Grid item xs={6}>
@@ -189,21 +201,27 @@ export default function LandingPage(props) {
                   name="ReactDatepicker"
                   render={({ field: { onChange, onBlur, value, ref } }) => (
                     <ReactDatePicker
-                      onChange={onChange}
+                      required
+                      //onChange={onChange}
                       onBlur={onBlur}
                       disabled={selectedValue !== "Round-trip"}
-                      selected={value}
-                      minDate={new Date()}
+                      selected={endDate}
+                      onChange={(date) => setEndDate(date)}
+                      startDate={startDate}
+                      endDate={endDate}
+                      minDate={startDate}
+                    //  minDate={startdate}
                       dateFormat='dd/MM/yyyy'
-                      filterDate={date => date.getDate() !== 6 && date.getDate() !== 0} />)} />
+                      filterDate={date => date.getDay() !== 6 && date.getDay() !== 0} />)} />
               </Grid>
             </Grid>
+
 
             <Grid container spacing={2}>
                   
               <Grid item xs={6} style={{marginTop:20}}>
                 <label >Adult count</label>
-                <Incredecre/ > 
+                <Adultcount  / > 
 
                 <label >Children count</label>
                 <Incredecre/ > 
@@ -217,16 +235,12 @@ export default function LandingPage(props) {
                   <Form.Control
                     style={{ width: 232, padding: 10 , marginTop:20}}
                     as="select"
-                    name="Class"
-                    {...register("Class", {
-                      required: true
-                    })}>
+                    name="Class">
                     <option>Economy</option>
                     <option>Premium Economy</option>
                     <option>Bussiness</option>
                   </Form.Control>
                 </Form.Group>
-                {errors.Class && <p>This field is required</p>}
               </Grid>
             </Grid>
 

@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { TextField } from "@material-ui/core"
-
+import {TextField} from "@material-ui/core"
 import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
 import IconButton from "@material-ui/core/IconButton";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
@@ -35,21 +34,20 @@ function Display(props) {
       labelWidth={0}
     />)}
 
-function Incredecre() {
-
-  const [counter, setCounter] = useState(0);
+function Adultcount() {
+ 
+  const [counter, setCounter] = useState(1);
   const incrementCounter = () => setCounter(counter + 1);
   let decrementCounter = () => setCounter(counter - 1);
-
-  if (counter <= 1) {
+  if(counter<=1) {
     decrementCounter = () => setCounter(0);
   }
   return (
-    <div required>
-      <ButtonIncrement onClickFunc={incrementCounter} />
-      <Display message={counter} />
-      <ButtonDecrement onClickFunc={decrementCounter} />
+    <div required> 
+      <ButtonIncrement onClickFunc={incrementCounter}/>
+      <Display message={counter}/> 
+      <ButtonDecrement onClickFunc={decrementCounter}/>
     </div>
   );
 }
-export default Incredecre;
+export default Adultcount

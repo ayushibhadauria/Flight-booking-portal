@@ -42,8 +42,8 @@ export default function Booking() {
               <TableCell></TableCell>
               <TableCell >From</TableCell>
               <TableCell >To</TableCell>
-              <TableCell >Date&nbsp;</TableCell>
-              <TableCell >Status&nbsp;</TableCell>
+              <TableCell >Date</TableCell>
+              <TableCell >Status</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

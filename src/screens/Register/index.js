@@ -1,7 +1,7 @@
 import React, { useRef } from 'react'
 import { useForm } from "react-hook-form";
 import { RadioGroup, FormControlLabel, Radio, Grid, Container, makeStyles, Button, TextField } from '@material-ui/core';
-import { useSelector, useDispatch } from 'react-redux'
+import {useDispatch } from 'react-redux'
 
 const Register = () => {
     const useStyles = makeStyles((theme) => ({
@@ -22,13 +22,14 @@ const Register = () => {
            
           
         },
-      container: { display: "flex", flexWrap: "wrap", position: "absolute",   justifyContent: 'center', top: 100, left: 700, alignItems: "center" }
-  
-        // radio: {
-        //     color: "white"
-        // },
-      
+      container: { 
+          display: "flex", flexWrap: "wrap", 
+          position: "absolute",   
+          justifyContent: 'center', 
+          top: 100, left: 700, 
+          alignItems: "center" }
     }));
+
     const classes = useStyles();
     const dispatch = useDispatch()
     const [gender, setGender] = React.useState('female');
@@ -51,7 +52,6 @@ const Register = () => {
         localStorage.setItem(`${data?.email}`, JSON.stringify(userData))
         alert("Registered Successfully !")
         reset();
-        
     }
 
     return (

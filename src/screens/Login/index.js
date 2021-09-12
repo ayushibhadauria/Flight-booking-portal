@@ -4,8 +4,6 @@ import { useHistory } from "react-router-dom";
 import {  useDispatch } from 'react-redux'
 import {Grid, Button, makeStyles, Container} from "@material-ui/core"
 
-
-
 const Login = () => {
 
     const useStyles = makeStyles((theme) => ({
@@ -16,23 +14,21 @@ const Login = () => {
             alignItems: 'center',
             height: '100vh',
             border: 'block',
-            backgroundColor: 'white'
-            
+            backgroundColor: 'white' 
         },
         form: {
             border: 'inset',
             borderRadius: 10 + 'px',
             backgroundColor: 'white',
-           
-          
         },
-      container: { display: "flex", border:  ' inset' , 
-      borderRadius: 10 + 'px',flexWrap: "wrap", position: "absolute",   justifyContent: 'center', top:100, left: 700, alignItems: "center" }
-  
-        // radio: {
-        //     color: "white"
-        // },
-      
+      container: { 
+            display: "flex", border:  ' inset' , 
+            borderRadius: 10 + 'px',
+            flexWrap: "wrap", 
+            position: "absolute",   
+            justifyContent: 'center', 
+            top:100, left: 700, 
+            alignItems: "center" }
     }));
     
     const classes = useStyles();
@@ -41,7 +37,6 @@ const Login = () => {
     const { register, handleSubmit, formState: { errors } , reset} = useForm();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    //const isUserLogin = useSelector(state => state)
 
     const handleChangeEmail = (e) => {
         const email = e.target.value;
@@ -53,14 +48,13 @@ const Login = () => {
         setPassword(password);
     }
 
-
     const onSubmit = (data) => {
         let User_Storage_data = JSON.parse(localStorage.getItem(`${data.email}`))
         console.log('User_Storage_data', User_Storage_data);
 
         if (User_Storage_data?.userProfileData != null &&
-            User_Storage_data?.userProfileData.email == data.email &&
-            User_Storage_data?.userProfileData.password == data.password) {
+            User_Storage_data?.userProfileData.email === data.email &&
+            User_Storage_data?.userProfileData.password === data.password) {
 
             let userData = {
                 userProfileData: data,
@@ -102,9 +96,8 @@ const Login = () => {
             <div/>
             <div style ={{display:"flex", flexDirection:"column" , maxWidth:400, minWidth: 300}}>
             <Grid container justify="center">
-           
                 </Grid>  
-                <label>Email</label>
+                    <label>Email</label>
                     <input
                         name="email"
                         onChange={handleChangeEmail}
@@ -116,7 +109,6 @@ const Login = () => {
                     </input>
                     {errors.email && <p>This email field is required</p>}
 
-
                     <label>Password</label>
                     <input
                         name="password"
@@ -126,24 +118,15 @@ const Login = () => {
                         type="password"
                         {...register("password", {
                             required: true, minLength: 6
-                        })}
-                        >
+                        })}>
                     </input>
                     {errors.password && <p>This email field is required</p>}
 
-
-                <div style={{height:20}}/>
-                <Button type ="submit" color="primary" variant="contained">Login</Button>
-                <div style={{height:20}}/>
-                
-          
-
-            
-               
-
-            </div>
-            </Grid>
-
+                    <div style={{height:20}}/>
+                    <Button type ="submit" color="primary" variant="contained">Login</Button>
+                    <div style={{height:20}}/>
+                </div>  
+                </Grid>
             </Container>
         </Grid>
         </form>
@@ -151,11 +134,4 @@ const Login = () => {
     )
 }
 
-// const styles = {
-//     buttonStyle: {
-//       color: '#000',
-//       backgroundColor: 'white',
-//       marginRight: 10
-//     }
-//   }
 export default Login;
