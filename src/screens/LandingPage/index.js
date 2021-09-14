@@ -13,7 +13,7 @@ import '../../component/BookFlight/Count'
 import Incredecre from '../../component/BookFlight/Count';
 import { useHistory } from "react-router-dom";
 import Adultcount from '../../component/BookFlight/Adultcount';
-
+import { watchUpdateUser } from '../../sagas/saga'
 
 export default function LandingPage(props) {
   const useStyles = makeStyles((theme) => ({
@@ -27,12 +27,14 @@ export default function LandingPage(props) {
       backgroundColor: 'black'
     },
     form: {
-    
+
       backgroundColor: 'white'
     },
-    container: { border: 'inset',
-    borderRadius: 10 + 'px',display: "flex", flexWrap: "wrap", position: "absolute", 
-      justifyContent: 'center', top: 100, left: 650, alignItems: "center" }
+    container: {
+      border: 'inset',
+      borderRadius: 10 + 'px', display: "flex", flexWrap: "wrap", position: "absolute",
+      justifyContent: 'center', top: 100, left: 650, alignItems: "center"
+    }
 
   }));
   const [error, setError] = useState(null);
@@ -54,23 +56,27 @@ export default function LandingPage(props) {
   }, [])
 
   const onSubmit = (data) => {
-    if (isUserLogin.login === true) {
-      let userData = {
-        userProfileData: isUserLogin.userData.userProfileData,
-        token: true,
-        numberOfBooking: isUserLogin.Num_of_Booking + 1,
-        flightData: data
-      }
-      dispatch({ type: 'UPDATE_USER', payload: [true, userData, isUserLogin.Num_of_Booking + 1] })
-
-      localStorage.setItem(`${isUserLogin.userData.userProfileData.email} ${isUserLogin.Num_of_Booking + 1}`, JSON.stringify(userData))
-      //alert("Flight data saved!!!!")
-      history.push('/success')
-    } else {
-      alert("please login first!")
-      history.push('/login')
-    }
-    reset();
+    let objGenerator = watchUpdateUser()
+    console.log("GEnereator console:-->", objGenerator.next())
+    console.log("GEnereator console2222:-->", objGenerator.next('shobha'))
+    return;
+    // if (isUserLogin.login === true) {
+    //   let userData = {
+    //     userProfileData: isUserLogin.userData.userProfileData,
+    //     token: true,
+    //     numberOfBooking: isUserLogin.Num_of_Booking + 1,
+    //     flightData: data
+    //   }
+    //   dispatch({ type: 'UPDATE_USER', payload: [true, userData, isUserLogin.Num_of_Booking + 1] })
+     
+    //   localStorage.setItem(`${isUserLogin.userData.userProfileData.email} ${isUserLogin.Num_of_Booking + 1}`, JSON.stringify(userData))
+    //   //alert("Flight data saved!!!!")
+    //   history.push('/success')
+    // } else {
+    //   alert("please login first!")
+    //   history.push('/login')
+    // }
+    // reset();
   }
 
   useEffect(() => {
@@ -97,162 +103,162 @@ export default function LandingPage(props) {
     return (
       <div className={classes.root} >
         <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
-        <Grid container style={{minHeight: '100vh'}}>
+          <Grid container style={{ minHeight: '100vh' }}>
             <Grid item xs={12} sm={12}>
-                <img  src = "/images/original.jpg"
-                style= {{width: "100%", height : "100%", objectFit: "cover", opacity: 0.5, marginTop: 100}}
-                alt="error"/>
+              <img src="/images/original.jpg"
+                style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.5, marginTop: 100 }}
+                alt="error" />
             </Grid>
 
-          <Container className={classes.container} maxWidth="sm"  >
-          <FormControl component="fieldset">
-          
-          <Controller
-            rules={{ required: true }}
-            control={control}
-            //defaultValue="business"
-            name="promoting2"
-            render={({ field }) => {
-              const { name, onBlur, onChange, value } = field;
-              return (
-                <RadioGroup row
-                  value={value}
-                  onBlur={onBlur}
-                  onChange={(e) => {
-                    onChange(e);
-                    console.log(e.target.value);
+            <Container className={classes.container} maxWidth="sm"  >
+              <FormControl component="fieldset">
+
+                <Controller
+                  rules={{ required: true }}
+                  control={control}
+                  //defaultValue="business"
+                  name="promoting2"
+                  render={({ field }) => {
+                    const { name, onBlur, onChange, value } = field;
+                    return (
+                      <RadioGroup row
+                        value={value}
+                        onBlur={onBlur}
+                        onChange={(e) => {
+                          onChange(e);
+                          console.log(e.target.value);
+                        }}
+                      >
+                        <FormControlLabel
+                          checked={selectedValue === 'One-way'}
+                          onChange={(e) => setSelectedValue(e.target.value)}
+                          //defaultValue="One-way"
+                          value="One-way"
+                          name="trip"
+                          label="One-way"
+                          required={true}
+                          control={<Radio />} />
+                        <FormControlLabel
+                          checked={selectedValue === 'Round-trip'}
+                          onChange={(e) => setSelectedValue(e.target.value)}
+                          value="Round-trip"
+                          name="trip"
+                          label="Round-trip"
+                          control={<Radio />} />
+                        {errors.promoting2 && <p>This field is required</p>}
+                      </RadioGroup>
+                    );
                   }}
-                >
-                  <FormControlLabel
-                    checked={selectedValue === 'One-way'}
-                    onChange={(e)=> setSelectedValue(e.target.value)}
-                    //defaultValue="One-way"
-                    value="One-way"
-                    name="trip"
-                    label="One-way"
-                    required={true}
-                    control={<Radio />} />
-                  <FormControlLabel
-                    checked={selectedValue === 'Round-trip'}
-                    onChange={(e)=> setSelectedValue(e.target.value)}
-                    value="Round-trip"
-                    name="trip"
-                    label="Round-trip"
-                    control={<Radio />} />
-                   {errors.promoting2 && <p>This field is required</p>}
-                </RadioGroup>
-              );
-            }}
-          />
-        </FormControl>
+                />
+              </FormControl>
 
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
-                <Autocomplete
-                  id="from"
-                  options={cities}
-                  getOptionLabel={(option) => option.name}
-                  style={{ maxWidth: '400px', margin: '0 auto', display: "flex" }}
-                  renderInput={(params) => <TextField {...params} label="From" variant="outlined" name="from" />}
-                  {...register("from", {
-                    required: true
-                  })} />
-                {errors.from && <p>This field is required</p>}
+              <Grid container spacing={2}>
+                <Grid item xs={6}>
+                  <Autocomplete
+                    id="from"
+                    options={cities}
+                    getOptionLabel={(option) => option.name}
+                    style={{ maxWidth: '400px', margin: '0 auto', display: "flex" }}
+                    renderInput={(params) => <TextField {...params} label="From" variant="outlined" name="from" />}
+                    {...register("from", {
+                      required: true
+                    })} />
+                  {errors.from && <p>This field is required</p>}
+                </Grid>
+
+                <Grid item xs={6}>
+                  <Autocomplete
+                    id="to"
+                    options={cities}
+                    getOptionLabel={(option) => option.name}
+                    style={{ maxWidth: '400px', margin: '0 auto', display: "flex" }}
+                    renderInput={(params) => <TextField {...params} label="To" variant="outlined" name="to" />}
+                    {...register("to", {
+                      required: true
+                    })} />
+                  {errors.to && <p>This field is required</p>}
+                </Grid>
               </Grid>
 
-              <Grid item xs={6}>
-                <Autocomplete
-                  id="to"
-                  options={cities}
-                  getOptionLabel={(option) => option.name}
-                  style={{ maxWidth: '400px', margin: '0 auto', display: "flex" }}
-                  renderInput={(params) => <TextField {...params} label="To" variant="outlined" name="to" />}
-                  {...register("to", {
-                    required: true
-                  })} />
-                {errors.to && <p>This field is required</p>}
-              </Grid>
-            </Grid>
+              <Grid container spacing={2}>
+                <Grid item xs={6}>
+                  <label >Depart on</label>
+                  <Controller
+                    control={control}
+                    name="ReactDatepicker"
+                    render={({ field: { onChange, onBlur, value, ref } }) => (
+                      <ReactDatePicker
+                        required
+                        //onChange={onChange}
+                        onChange={(date) => setStartDate(date)}
+                        startDate={startDate}
+                        endDate={endDate}
+                        onBlur={onBlur}
+                        selected={startDate}
+                        minDate={new Date()}
+                        dateFormat='dd/MM/yyyy'
+                        filterDate={date => date.getDay() !== 6 && date.getDay() !== 0} />)} />
+                </Grid>
 
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
-                <label >Depart on</label>
-                <Controller
-                  control={control}
-                  name="ReactDatepicker"
-                  render={({ field: { onChange, onBlur, value, ref } }) => (
-                    <ReactDatePicker
-                      required
-                      //onChange={onChange}
-                      onChange={(date) => setStartDate(date)}
-                      startDate={startDate}
-                      endDate={endDate}
-                      onBlur={onBlur}
-                      selected={startDate}
-                      minDate={new Date()}
-                      dateFormat='dd/MM/yyyy'
-                      filterDate={date => date.getDay() !== 6 && date.getDay() !== 0} />)} />
-              </Grid>
-
-              <Grid item xs={6}>
-                <label >Return on  </label>
-                <Controller
-                  control={control}
-                  name="ReactDatepicker"
-                  render={({ field: { onChange, onBlur, value, ref } }) => (
-                    <ReactDatePicker
-                      required
-                      //onChange={onChange}
-                      onBlur={onBlur}
-                      disabled={selectedValue !== "Round-trip"}
-                      selected={endDate}
-                      onChange={(date) => setEndDate(date)}
-                      startDate={startDate}
-                      endDate={endDate}
-                      minDate={startDate}
-                    //  minDate={startdate}
-                      dateFormat='dd/MM/yyyy'
-                      filterDate={date => date.getDay() !== 6 && date.getDay() !== 0} />)} />
-              </Grid>
-            </Grid>
-
-
-            <Grid container spacing={2}>
-                  
-              <Grid item xs={6} style={{marginTop:20}}>
-                <label >Adult count</label>
-                <Adultcount  / > 
-
-                <label >Children count</label>
-                <Incredecre/ > 
-
-                <label >Infant count</label>
-                <Incredecre/ > 
+                <Grid item xs={6}>
+                  <label >Return on  </label>
+                  <Controller
+                    control={control}
+                    name="ReactDatepicker"
+                    render={({ field: { onChange, onBlur, value, ref } }) => (
+                      <ReactDatePicker
+                        required
+                        //onChange={onChange}
+                        onBlur={onBlur}
+                        disabled={selectedValue !== "Round-trip"}
+                        selected={endDate}
+                        onChange={(date) => setEndDate(date)}
+                        startDate={startDate}
+                        endDate={endDate}
+                        minDate={startDate}
+                        //  minDate={startdate}
+                        dateFormat='dd/MM/yyyy'
+                        filterDate={date => date.getDay() !== 6 && date.getDay() !== 0} />)} />
+                </Grid>
               </Grid>
 
-              <Grid item xs={6}>
-                <Form.Group controlId="exampleForm.ControlSelect1">
-                  <Form.Control
-                    style={{ width: 232, padding: 10 , marginTop:20}}
-                    as="select"
-                    name="Class">
-                    <option>Economy</option>
-                    <option>Premium Economy</option>
-                    <option>Bussiness</option>
-                  </Form.Control>
-                </Form.Group>
-              </Grid>
-            </Grid>
 
-            <Grid container spacing={6}>
-              <Grid item xs={12} >
-                <Button fullWidth variant="contained" color="default"
-                  style={{ maxWidth: '300px', margin: '0 auto', display: "flex" , marginBottom: '10px'}}
-                  type="submit" > Book </Button>
-              </Grid>
-            </Grid>
+              <Grid container spacing={2}>
 
-          </Container>
+                <Grid item xs={6} style={{ marginTop: 20 }}>
+                  <label >Adult count</label>
+                  <Adultcount />
+
+                  <label >Children count</label>
+                  <Incredecre />
+
+                  <label >Infant count</label>
+                  <Incredecre />
+                </Grid>
+
+                <Grid item xs={6}>
+                  <Form.Group controlId="exampleForm.ControlSelect1">
+                    <Form.Control
+                      style={{ width: 232, padding: 10, marginTop: 20 }}
+                      as="select"
+                      name="Class">
+                      <option>Economy</option>
+                      <option>Premium Economy</option>
+                      <option>Bussiness</option>
+                    </Form.Control>
+                  </Form.Group>
+                </Grid>
+              </Grid>
+
+              <Grid container spacing={6}>
+                <Grid item xs={12} >
+                  <Button fullWidth variant="contained" color="default"
+                    style={{ maxWidth: '300px', margin: '0 auto', display: "flex", marginBottom: '10px' }}
+                    type="submit" > Book </Button>
+                </Grid>
+              </Grid>
+
+            </Container>
 
           </Grid>
         </form>

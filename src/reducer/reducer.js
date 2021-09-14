@@ -1,4 +1,4 @@
-const UPDATE_USER = "UPDATE_USER";
+const UPDATE_USER = 'UPDATE_USER_ASYNC';
 
 const inititalState = {
     login: false,
