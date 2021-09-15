@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { StrictMode } from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
@@ -12,10 +12,12 @@ import { watchUpdateUser } from './sagas/saga';
 const SagaMiddleware = createSagaMiddleware();
 const store = createStore(reducer, applyMiddleware(SagaMiddleware))
 
-SagaMiddleware.run(watchUpdateUser);
+//SagaMiddleware.run(watchUpdateUser);
 
 ReactDOM.render(
-  <Provider store ={store}> <App/></Provider>,
+  <React.StrictMode>
+    <Provider store ={store}> <App/></Provider>
+  </React.StrictMode>,
   document.getElementById('root')
 );
 
