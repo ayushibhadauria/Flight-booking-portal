@@ -12,7 +12,7 @@ import { watchUpdateUser } from './sagas/saga';
 const SagaMiddleware = createSagaMiddleware();
 const store = createStore(reducer, applyMiddleware(SagaMiddleware))
 
-//SagaMiddleware.run(watchUpdateUser);
+SagaMiddleware.run(watchUpdateUser);
 
 ReactDOM.render(
   <Provider store ={store}> <App/></Provider>,

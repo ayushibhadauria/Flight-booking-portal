@@ -56,27 +56,27 @@ export default function LandingPage(props) {
   }, [])
 
   const onSubmit = (data) => {
-    let objGenerator = watchUpdateUser()
-    console.log("GEnereator console:-->", objGenerator.next())
-    console.log("GEnereator console2222:-->", objGenerator.next('shobha'))
-    return;
-    // if (isUserLogin.login === true) {
-    //   let userData = {
-    //     userProfileData: isUserLogin.userData.userProfileData,
-    //     token: true,
-    //     numberOfBooking: isUserLogin.Num_of_Booking + 1,
-    //     flightData: data
-    //   }
-    //   dispatch({ type: 'UPDATE_USER', payload: [true, userData, isUserLogin.Num_of_Booking + 1] })
-     
-    //   localStorage.setItem(`${isUserLogin.userData.userProfileData.email} ${isUserLogin.Num_of_Booking + 1}`, JSON.stringify(userData))
-    //   //alert("Flight data saved!!!!")
-    //   history.push('/success')
-    // } else {
-    //   alert("please login first!")
-    //   history.push('/login')
-    // }
-    // reset();
+    if (isUserLogin.login === true) {
+      let userData = {
+        userProfileData: isUserLogin.userData.userProfileData,
+        token: true,
+        numberOfBooking: isUserLogin.Num_of_Booking + 1,
+        flightData: data
+      }
+      
+      dispatch({
+        type: 'UPDATE_USER',
+        payload: [true, userData, isUserLogin.Num_of_Booking + 1]
+      })
+
+      localStorage.setItem(`${isUserLogin.userData.userProfileData.email} ${isUserLogin.Num_of_Booking + 1}`, JSON.stringify(userData))
+      //alert("Flight data saved!!!!")
+      history.push('/success')
+    } else {
+      alert("please login first!")
+      history.push('/login')
+    }
+    reset();
   }
 
   useEffect(() => {
